@@ -12,12 +12,12 @@ anti-uninstall (Device Admin), and a 5-minute watchdog heartbeat.
    cd clearmind-android
    git init && git add . && git commit -m "ClearMind companion"
    git branch -M main
-   git remote add origin https://github.com/YOUR_USER/clearmind-android.git
+   git remote add origin https://github.com/rachelkariuki011-bot/clearmind-android.git
    git push -u origin main
    ```
 3. Open **Actions** in GitHub — "Build ClearMind APK" runs automatically (or press *Run workflow*).
 4. When it finishes, the APK is at
-   `https://github.com/YOUR_USER/clearmind-android/releases/latest/download/clearmind.apk`.
+   `https://github.com/rachelkariuki011-bot/clearmind-android/releases/latest/download/clearmind.apk`.
    Paste that link on the ClearMind **/download** page.
 
 ## Signing (recommended before real families use it)
