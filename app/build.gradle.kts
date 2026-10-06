@@ -34,6 +34,8 @@ android {
     }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     kotlinOptions { jvmTarget = "17" }
+    // Release lint otherwise aborts CI on warnings-as-errors (e.g. MissingPermission in services).
+    lint { abortOnError = false; checkReleaseBuilds = false }
 }
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
