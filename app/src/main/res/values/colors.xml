@@ -1,0 +1,13 @@
+<resources>
+    <color name="violet">#7C6FF0</color>
+    <color name="violet_dark">#5B4BD6</color>
+    <color name="mint">#5EEAD4</color>
+    <color name="off_white">#FAFAFF</color>
+    <color name="ink">#312E81</color>
+    <color name="ink_soft">#6B6A8F</color>
+    <color name="card">#FFFFFF</color>
+    <color name="card_stroke">#E6E4F5</color>
+    <color name="ok_green">#1E9E6A</color>
+    <color name="status_background">#EDEBFD</color>
+    <color name="error">#B42318</color>
+</resources>

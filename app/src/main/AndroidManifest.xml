@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
 
     <application android:label="ClearMind" android:allowBackup="false"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/Theme.ClearMind">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +26,7 @@
                 <data android:scheme="https" android:host="focused-clearminds.lovable.app" android:pathPrefix="/pair/" />
             </intent-filter>
         </activity>
+        <activity android:name=".StudentWorkspaceActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
 
         <service android:name=".FocusLockService" android:exported="false"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
@@ -36,6 +37,7 @@
         <service android:name=".DwellTrackingVpnService" android:exported="false"
             android:permission="android.permission.BIND_VPN_SERVICE"
             android:foregroundServiceType="specialUse">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="Parent-authorized local DNS safety filtering during student study" />
             <intent-filter><action android:name="android.net.VpnService" /></intent-filter>
         </service>
 

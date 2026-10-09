@@ -16,9 +16,19 @@ class FocusLockService : AccessibilityService() {
         if (e.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
         val pkg = e.packageName?.toString() ?: return
         val rules = ApiClient(this).cachedRules() ?: return
-        val blocked = rules.optJSONArray("blockedApps") ?: return
-        if ((0 until blocked.length()).none { blocked.getString(it) == pkg }) return
         val mode = activeMode(rules) ?: return
+        if (pkg == packageName || pkg == "com.android.dialer" || pkg == "com.google.android.dialer" || pkg == "com.android.phone" || pkg == "com.android.systemui" || pkg == "com.android.settings") return
+        val blocked = rules.optJSONArray("blockedApps") ?: return
+        val isBlocked = (0 until blocked.length()).any { blocked.getString(it) == pkg }
+        val allowed = rules.optJSONArray("allowedApps")
+        val homeFocus = mode != "hard_lock" && rules.optBoolean("ultraFocus")
+        val isAllowed = allowed != null && (0 until allowed.length()).any { allowed.getString(it) == pkg }
+        if (!isBlocked && !(homeFocus && !isAllowed)) return
+        if (homeFocus && !isAllowed) {
+            performGlobalAction(GLOBAL_ACTION_HOME)
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.API_BASE + "/focus-lock")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            return
+        }
         if (mode == "toll_booth" && System.currentTimeMillis() < tollPassUntil) return
         performGlobalAction(GLOBAL_ACTION_HOME)
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.API_BASE + if (mode == "hard_lock") "/focus-lock" else "/tollbooth"))

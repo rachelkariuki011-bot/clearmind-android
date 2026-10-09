@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ClearMind" android:textColor="@color/ink" android:textSize="28sp" android:textStyle="bold" />
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Connect your study phone" android:textColor="@color/ink_soft" android:textSize="16sp" android:layout_marginTop="6dp" />
+<TextView android:id="@+id/statusPill" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="14dp" android:layout_marginTop="16dp" android:background="@drawable/bg_pill" android:textColor="@color/ink" />
+<LinearLayout android:id="@+id/pairingCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:layout_marginTop="16dp" android:background="@drawable/bg_card">
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Pairing" android:textStyle="bold" android:textSize="18sp" android:textColor="@color/ink" />
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Scan your parent’s QR or enter their pairing code." android:layout_marginTop="6dp" android:textColor="@color/ink_soft" />
+<Button android:id="@+id/btnScan" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="12dp" android:text="Scan pairing QR" />
+<EditText android:id="@+id/etCode" android:layout_width="match_parent" android:layout_height="56dp" android:hint="CLM-000000" android:inputType="textCapCharacters" android:singleLine="true" android:gravity="center" android:textSize="22sp" android:textColor="@color/ink" android:contentDescription="Pairing code" />
+<Button android:id="@+id/btnPair" android:layout_width="match_parent" android:layout_height="48dp" android:text="Connect phone" />
+</LinearLayout>
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:layout_marginTop="12dp" android:background="@drawable/bg_card">
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Focus Lock" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Accessibility permission" android:textColor="@color/ink_soft" />
+<TextView android:id="@+id/stepA11y" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textColor="@color/ink_soft" />
+<Button android:id="@+id/btnA11y" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:text="Review permission" />
+</LinearLayout>
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:layout_marginTop="12dp" android:background="@drawable/bg_card">
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Safe Browsing" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="VPN protection" android:textColor="@color/ink_soft" />
+<TextView android:id="@+id/stepVpn" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textColor="@color/ink_soft" />
+<Button android:id="@+id/btnVpn" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:text="Enable Safe Browsing" />
+</LinearLayout>
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:layout_marginTop="12dp" android:background="@drawable/bg_card">
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Device Admin" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Device protection permission" android:textColor="@color/ink_soft" />
+<TextView android:id="@+id/stepAdmin" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textColor="@color/ink_soft" />
+<Button android:id="@+id/btnAdmin" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:text="Review permission" />
+</LinearLayout>
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:layout_marginTop="12dp" android:background="@drawable/bg_card">
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Battery Optimization" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Background protection" android:textColor="@color/ink_soft" />
+<TextView android:id="@+id/stepBattery" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textColor="@color/ink_soft" />
+<Button android:id="@+id/btnBattery" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:text="Allow background running" />
+</LinearLayout>
+<Button android:id="@+id/btnWorkspace" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="16dp" android:text="Continue learning" android:visibility="gone" />
+<TextView android:id="@+id/scheduleList" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:textColor="@color/ink_soft" android:paddingBottom="16dp" />
+</LinearLayout></ScrollView>

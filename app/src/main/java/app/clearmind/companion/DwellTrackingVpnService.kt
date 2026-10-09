@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.net.VpnService
 import android.os.ParcelFileDescriptor
+import android.os.Build
 import kotlinx.coroutines.*
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -17,16 +18,20 @@ import java.time.Instant
  * Dwell = time from first blocked lookup until lookups for that domain stop (or screen off → exitMeasured=false).
  */
 class DwellTrackingVpnService : VpnService() {
+    companion object { @Volatile var running = false; private set }
     private var tun: ParcelFileDescriptor? = null
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val open = mutableMapOf<String, Pair<String, Long>>() // domain -> (category, firstSeenMs)
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(2, notification())
+        if (Build.VERSION.SDK_INT >= 34) startForeground(2, notification(), android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+        else startForeground(2, notification())
         if (tun == null) {
             tun = Builder().setSession("ClearMind Safe Browsing")
                 .addAddress("10.111.0.2", 32).addDnsServer("10.111.0.1").addRoute("10.111.0.1", 32)
                 .establish()
+            running = tun != null
+            if (tun == null) { stopSelf(); return START_NOT_STICKY }
             scope.launch { loop() }
             scope.launch { flushDwell() }
         }
@@ -34,7 +39,8 @@ class DwellTrackingVpnService : VpnService() {
     }
 
     private suspend fun loop() {
-        val input = FileInputStream(tun!!.fileDescriptor); val output = FileOutputStream(tun!!.fileDescriptor)
+        val descriptor = tun ?: return
+        val input = FileInputStream(descriptor.fileDescriptor); val output = FileOutputStream(descriptor.fileDescriptor)
         val buf = ByteArray(32767)
         while (currentCoroutineContext().isActive) {
             val n = input.read(buf); if (n <= 0) continue
@@ -73,9 +79,10 @@ class DwellTrackingVpnService : VpnService() {
 
     private fun notification(): Notification {
         val nm = getSystemService(NotificationManager::class.java)
-        nm.createNotificationChannel(NotificationChannel("shield", "Safe Browsing", NotificationManager.IMPORTANCE_MIN))
-        return Notification.Builder(this, "shield").setContentTitle("ClearMind Safe Browsing is on").setSmallIcon(android.R.drawable.ic_lock_lock).build()
+        if (Build.VERSION.SDK_INT >= 26) nm.createNotificationChannel(NotificationChannel("shield", "Safe Browsing", NotificationManager.IMPORTANCE_LOW))
+        val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, "shield") else Notification.Builder(this)
+        return builder.setContentTitle("ClearMind Safe Browsing is on").setSmallIcon(android.R.drawable.ic_lock_lock).setOngoing(true).build()
     }
 
-    override fun onDestroy() { scope.cancel(); tun?.close(); tun = null; super.onDestroy() }
+    override fun onDestroy() { running = false; scope.cancel(); tun?.close(); tun = null; super.onDestroy() }
 }

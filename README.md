@@ -4,6 +4,27 @@ The phone app that enforces what parents and schools set in ClearMind:
 Focus Lock (Accessibility), Safe Browsing (local DNS VPN with dwell tracking),
 anti-uninstall (Device Admin), and a 5-minute watchdog heartbeat.
 
+## Student workspace
+
+Pairing opens a full-screen, origin-restricted WebView with Dashboard, Study,
+Timetable and STEM Labs. Study contains the 20 CBC revision lessons and an
+introductory British KS3 revision set (not a complete or accredited syllabus).
+The shield icon opens a device-health sheet; permissions can be reviewed without
+closing or signing out of the learning session.
+
+`GET /api/public/v1/pair`, authorized by the revocable device bearer, issues a
+one-time student magic-link hash. The WebView redeems it at `/companion-connect`
+and enters `/student-mobile`; the device bearer never enters JavaScript.
+The published web app must include these routes before installing this version.
+Existing paired phones can reconnect without a new pairing code.
+
+Cached focus rules and incident delivery work offline. The web learning workspace
+requires a connection; this version does not bundle an offline lesson application.
+Android still displays its required ongoing VPN notification. Device Admin does
+not guarantee anti-uninstall; parents must verify protection on each phone.
+
+The build workflow runs pairing-input unit tests before creating the APK.
+
 ## Get an APK in 5 minutes
 
 1. Create an empty GitHub repo named `clearmind-android`.

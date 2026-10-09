@@ -25,7 +25,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           CLEARMIND_API: ${{ vars.CLEARMIND_API || 'https://focused-clearminds.lovable.app' }}
-        run: gradle :app:assembleRelease
+        run: gradle :app:testDebugUnitTest :app:assembleRelease
       - run: cp app/build/outputs/apk/release/app-release*.apk clearmind.apk
       - uses: softprops/action-gh-release@v2
         with:

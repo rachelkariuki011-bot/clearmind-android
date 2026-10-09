@@ -12,6 +12,7 @@ import android.os.BatteryManager
 import android.os.SystemClock
 import android.provider.Settings
 import androidx.work.*
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
@@ -29,7 +30,10 @@ class WatchdogReceiver : BroadcastReceiver() {
         fun schedule(ctx: Context) {
             val am = ctx.getSystemService(AlarmManager::class.java)
             val pi = PendingIntent.getBroadcast(ctx, 0, Intent(ctx, WatchdogReceiver::class.java).setAction("app.clearmind.WATCHDOG"), PendingIntent.FLAG_IMMUTABLE)
-            runCatching { am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + INTERVAL, pi) }
+            runCatching {
+                if (android.os.Build.VERSION.SDK_INT >= 31 && !am.canScheduleExactAlarms()) am.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + INTERVAL, pi)
+                else am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + INTERVAL, pi)
+            }
                 .onFailure { am.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + INTERVAL, pi) }
             // 15-minute WorkManager fallback for OEMs that kill alarms.
             WorkManager.getInstance(ctx).enqueueUniquePeriodicWork("watchdog", ExistingPeriodicWorkPolicy.KEEP,
@@ -38,7 +42,7 @@ class WatchdogReceiver : BroadcastReceiver() {
 
         fun tick(ctx: Context) = runBlocking {
             val api = ApiClient(ctx); if (!api.isPaired) return@runBlocking
-            runCatching { api.syncRules() }
+            runCatching { api.syncRules(); api.flushOutbox() }
             val battery = ctx.getSystemService(BatteryManager::class.java).getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
             val cm = ctx.getSystemService(ConnectivityManager::class.java)
             val caps = cm.getNetworkCapabilities(cm.activeNetwork)
@@ -50,9 +54,9 @@ class WatchdogReceiver : BroadcastReceiver() {
             }
             val a11y = Settings.Secure.getString(ctx.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)?.contains(ctx.packageName) == true
             val vpnOk = VpnService.prepare(ctx) == null
-            if (vpnOk) ctx.startForegroundService(Intent(ctx, DwellTrackingVpnService::class.java))
+            if (vpnOk) runCatching { ContextCompat.startForegroundService(ctx, Intent(ctx, DwellTrackingVpnService::class.java)) }
             val admin = ctx.getSystemService(DevicePolicyManager::class.java).isAdminActive(ComponentName(ctx, ClearMindAdminReceiver::class.java))
-            runCatching { api.heartbeat(battery, conn, a11y, vpnOk, admin) }
+            runCatching { api.heartbeat(battery, conn, a11y, DwellTrackingVpnService.running, admin) }
         }
     }
 }
